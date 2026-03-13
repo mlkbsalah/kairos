@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.10.9
+    hooks:
+      - id: uv-lock # update uv.lock wrt pyproject.toml
+      - id: pip-compile # compile requirements at every commit
+        args: [requirements.in, -o, requirements.txt] 
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.2
+    hooks:
+      - id: ruff # linter: logical/stylistic code quality (e.g confusion between l and I)
+        args: [--fix]
+      - id: ruff-format # formatter: shape of the code
