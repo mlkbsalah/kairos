@@ -1,3 +1,4 @@
+from typing import Tuple
 import jax.numpy as jnp
 
 
@@ -5,8 +6,8 @@ def kaplan_meier_estimator(
     times: jnp.ndarray,
     events: jnp.ndarray,
     max_unique: int,
-) -> jnp.ndarray:
-    """_summary_
+) -> Tuple[jnp.ndarray, jnp.ndarray]:
+    """Estimate the survival function using the Kaplan-Meier estimator.
 
     Args:
         times (jnp.ndarray): (n,) array of times
@@ -15,14 +16,15 @@ def kaplan_meier_estimator(
 
     Returns:
         jnp.ndarray: (max_unique, ) survival probabilities
+        jnp.ndarray: (max_unique, ) unique times
     """
 
     unique_times = jnp.unique(jnp.sort(times), size=max_unique, fill_value=-1)
 
     at_risk = jnp.sum((unique_times[:, None] <= times[None, :]), axis=1)
-    event_at_t = jnp.sum(
+    events_at_t = jnp.sum(
         (unique_times[:, None] == times[None, :]) * (events[None, :] == 1), axis=1
     )
 
-    probs = jnp.cumprod(1 - (event_at_t / at_risk))
-    return probs
+    probs = jnp.cumprod(1 - (events_at_t / at_risk))
+    return probs, unique_times
