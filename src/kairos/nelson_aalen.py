@@ -1,5 +1,7 @@
 import jax.numpy as jnp
 from typing import Tuple
+
+
 def nelson_aalen_estimator(
     times: jnp.ndarray,
     events: jnp.ndarray,
