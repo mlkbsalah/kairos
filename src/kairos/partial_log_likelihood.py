@@ -1,7 +1,9 @@
 import jax.numpy as jnp
+from jax import jit
 
 
-def cox_efron_log_likelihood(
+@jit(static_argnames=["tie_method", "max_j"])
+def partial_negloglik(
     beta: jnp.ndarray,
     X: jnp.ndarray,
     risk_matrix: jnp.ndarray,
@@ -9,9 +11,10 @@ def cox_efron_log_likelihood(
     d_k: jnp.ndarray,
     valid_mask: jnp.ndarray,
     max_j: int,
+    tie_method: str = "efron",
 ):
-    theta = jnp.exp(X @ beta)
     Xb = X @ beta
+    theta = jnp.exp(Xb)
 
     numerator = death_matrix @ Xb
 
