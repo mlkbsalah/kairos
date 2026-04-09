@@ -2,16 +2,14 @@ import jax.numpy as jnp
 from jax import jit
 
 
-@jit(static_argnames=["tie_method", "max_j"])
+@jit(static_argnames=["max_j"])
 def partial_negloglik(
     beta: jnp.ndarray,
     X: jnp.ndarray,
     risk_matrix: jnp.ndarray,
     death_matrix: jnp.ndarray,
     d_k: jnp.ndarray,
-    valid_mask: jnp.ndarray,
     max_j: int,
-    tie_method: str = "efron",
 ):
     Xb = X @ beta
     theta = jnp.exp(Xb)
@@ -33,6 +31,6 @@ def partial_negloglik(
 
     log_denom_sum = jnp.sum(log_denom, axis=1)
 
-    ll = jnp.sum(valid_mask * (numerator - log_denom_sum))
+    ll = jnp.sum(numerator - log_denom_sum)
 
     return ll
